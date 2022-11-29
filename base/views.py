@@ -1,13 +1,22 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from django.http import HttpResponse
+from .models import Meal_Plan, Day
 
 # Create your views here.
 def homePage(request):
     context = {}
+    if request.user.is_authenticated:
+        try:
+            meal_plan = Meal_Plan.objects.get(user_id=request.user)
+            days = Day.objects.filter(meal_plan=meal_plan)
+            context = {'meal_plan': meal_plan, 'days': days}
+        except:
+            messages.error(request, 'Create your meal plan!')
+                
     return render(request, 'base/home.html', context)
 
 def loginPage(request):

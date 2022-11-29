@@ -1,1 +1,11 @@
-<h3>Your plan</h3>
+<h3>Your plan - {{meal_plan.name}}</h3>
+<hr>
+{% for day in days %}
+    <h3>{{day.date}}</h3>
+    {% for meal in day.meals.all %}
+        <h4>{{day.meal_time}}: {{meal.name}}</h4>
+        <p>{{meal.description}}</p>
+        <small>Energy: {{meal.energy_kcal}} kcal</small>
+    {% endfor %}
+    <hr>
+{% endfor %}
