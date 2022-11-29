@@ -10,7 +10,13 @@
 
 <div class="home-container">
     <div>{% include 'base/inspirations_feed.html '%}</div>
+
+    {% if request.user.is_authenticated %}
+    <div>{% include 'base/yourplan_container.html' %}</div>
+    {% else %}
     <div>{% include 'base/homepage_container.html' %}</div>
+    {% endif %}
+
     <div>{% include 'base/profile_container.html' %}</div>
 </div>  
 {% endblock content %}
