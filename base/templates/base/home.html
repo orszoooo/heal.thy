@@ -1,5 +1,16 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<h1>Home</h1>
+<style>
+    .home-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+    }
+</style>
+
+<div class="home-container">
+    <div>{% include 'base/inspirations_feed.html '%}</div>
+    <div>{% include 'base/homepage_container.html' %}</div>
+    <div>{% include 'base/profile_container.html' %}</div>
+</div>  
 {% endblock content %}
