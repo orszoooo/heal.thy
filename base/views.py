@@ -15,8 +15,8 @@ def homePage(request):
             days = Day.objects.filter(meal_plan=meal_plan)
             context = {'meal_plan': meal_plan, 'days': days}
         except:
-            messages.error(request, 'Create your meal plan!')
-                
+            messages.error(request, 'An error occured during registration!')
+           
     return render(request, 'base/home.html', context)
 
 def loginPage(request):

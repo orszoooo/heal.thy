@@ -26,15 +26,16 @@ class Meal(models.Model):
     def __str__(self):
         return self.name 
 
-
 class Day(models.Model):
     meal_plan = models.ForeignKey(Meal_Plan, on_delete=models.CASCADE)
     date = models.DateField()
-    meal_time = models.ForeignKey(Meal_Time, on_delete=models.SET_NULL, null=True)
-    meals = models.ManyToManyField(Meal, related_name="meals")
 
     def __str__(self):
         return str(self.date) 
 
-
+class Menu(models.Model):
+    day = models.ForeignKey(Day, on_delete=models.CASCADE)
+    meal_time = models.ForeignKey(Meal_Time, on_delete=models.SET_NULL, null=True)
+    #meals = models.ManyToManyField(Meal, related_name="meals")
+    meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
 
