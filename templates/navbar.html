@@ -7,10 +7,12 @@
 <hr>
 <div class="navbar-container">
     <span><a href="{% url 'home-page' %}">Home</a></span>
-    <span><a href="{% url 'home-page' %}">Make Plan</a></span>
-    <span><a href="{% url 'home-page' %}">Recipes</a></span>
+    <span><a href="{% url 'recipe-page' %}">Recipes</a></span>
     <span><a href="{% url 'home-page' %}">Health Advices</a></span>
     <span><a href="{% url 'home-page' %}">Forum</a></span>
-    <span><a href="{% url 'home-page' %}">Profile</a></span>
+    {% if request.user.is_authenticated %}
+        <span><a href="{% url 'create-plan' %}">Make Plan</a></span>
+        <span><a href="{% url 'profile-page' %}">Profile</a></span>
+    {% endif %}
 </div>
 <hr>

@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block content %}
+    <div>
+        <h3>Profile {{request.user}}</h3>
+        <hr>
+    </div>
+
+    <div>
+        <h3>Your plans</h3>
+        {% for plan in meal_plans %}
+            <h4>{{plan.name}}
+                {% if plan.is_active %}
+                    <a href="{% url 'deactivate-plan' plan.id%}">Dectivate</a>
+                {% else %}
+                    {% if active_plans < 1 %}   
+                        <a href="{% url 'activate-plan' plan.id%}">Activate</a>
+                    {% endif %}
+                {% endif %}
+                <a href="{% url 'edit-plan' plan.id%}">Edit</a>
+                <a href="{% url 'delete-plan' plan.id%}">Delete</a>
+            </h4>
+        {% endfor %}
+    </div>
+{% endblock content %}

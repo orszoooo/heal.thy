@@ -11,6 +11,7 @@ class Meal_Time(models.Model):
 class Meal_Plan(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200)
+    is_active = models.BooleanField(default=False)
     updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -20,6 +21,7 @@ class Meal_Plan(models.Model):
 class Meal(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=200)
+    category = models.ForeignKey(Meal_Time, on_delete=models.SET_NULL, null=True)
     description = models.TextField(null=True, blank=True) 
     energy_kcal = models.CharField(max_length=200)
     

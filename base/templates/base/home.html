@@ -11,10 +11,14 @@
 <div class="home-container">
     <div>{% include 'base/inspirations_feed.html '%}</div>
 
-    {% if request.user.is_authenticated %}
-    <div>{% include 'base/yourplan_container.html' %}</div>
+    {% if recipes %}
+    <div>{% include 'base/recipes_container.html' %}</div>
     {% else %}
-    <div>{% include 'base/homepage_container.html' %}</div>
+        {% if request.user.is_authenticated %}
+        <div>{% include 'base/yourplan_container.html' %}</div>
+        {% else %}
+        <div>{% include 'base/homepage_container.html' %}</div>
+        {% endif %}
     {% endif %}
 
     <div>{% include 'base/profile_container.html' %}</div>

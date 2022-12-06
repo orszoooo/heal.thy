@@ -1,11 +1,24 @@
-<h3>Your plan - {{meal_plan.name}}</h3>
-<hr>
-{% for day in days %}
-    <h3>{{day.date}}</h3>
-    {% for course in day.menu_set.all %}
-        <h4>{{course.meal_time}}: {{course.meal.name}}</h4>
-        <p>{{course.meal.description}}</p>
-        <small>Energy: {{course.meal.energy_kcal}} kcal</small>
-    {% endfor %}
+{% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <h3>{{ message }}</h3>
+            {% endfor %}
+        </ul>
+{% endif %}
+
+{% if meal_plan.is_active %}
+    <h3>Your plan - {{meal_plan.name}}</h3>
     <hr>
-{% endfor %}
+    {% for day in days %}
+    <h3>{{day.date}}</h3>
+        {% for course in day.menu_set.all %}
+            <h4>{{course.meal_time}}: {{course.meal.name}}</h4>
+            <p>{{course.meal.description}}</p>
+            <small>Energy: {{course.meal.energy_kcal}} kcal</small>
+        {% endfor %}
+    <hr>
+    {% endfor %}
+{% endif %}
+
+
+
