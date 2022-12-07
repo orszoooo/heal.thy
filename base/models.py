@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
 class Meal_Time(models.Model):
@@ -28,15 +29,9 @@ class Meal(models.Model):
     def __str__(self):
         return self.name 
 
-class Day(models.Model):
-    meal_plan = models.ForeignKey(Meal_Plan, on_delete=models.CASCADE)
-    date = models.DateField()
-
-    def __str__(self):
-        return str(self.date) 
-
 class Menu(models.Model):
-    day = models.ForeignKey(Day, on_delete=models.CASCADE)
+    meal_plan = models.ForeignKey(Meal_Plan, on_delete=models.CASCADE, default=1)
+    date = models.DateField(default=timezone.now)
     meal_time = models.ForeignKey(Meal_Time, on_delete=models.SET_NULL, null=True)
     #meals = models.ManyToManyField(Meal, related_name="meals")
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)

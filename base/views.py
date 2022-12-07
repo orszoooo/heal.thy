@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from .models import Meal_Plan, Day, Meal, Meal_Time
-from .forms import MealForm, MealPlanForm
+from .models import Meal_Plan, Menu, Meal, Meal_Time
+from .forms import MealForm, MealPlanForm, MenuForm
 
 # Create your views here.
 def homePage(request):
@@ -15,8 +15,8 @@ def homePage(request):
     if request.user.is_authenticated:
         try:
             meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active=True)
-            days = Day.objects.filter(meal_plan=meal_plan)
-            context = {'meal_plan': meal_plan, 'days': days}
+            menus = Menu.objects.filter(meal_plan=meal_plan)
+            context = {'meal_plan': meal_plan, 'menus': menus}
         except:
             messages.error(request, "Please create your meal plan!")
             messages.error(request, "If you have plan already, select active plan. You can do it in profile tab.")
@@ -86,35 +86,51 @@ def deleteMeal(request, pk):
 
 @login_required(login_url='login-page')
 def createMealPlan(request):
-    form = MealPlanForm()
+    meal_plan_form = MealPlanForm()
+    menu_form = MenuForm()
+    context = {'meal_plan_form': meal_plan_form, 'menu_form': menu_form}
 
+    try:
+        meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active = True)
+        context.update({'meal_plan': meal_plan})
+    except:
+        messages.error(request, "You have plans assigned. Select active plan. ")
+        messages.error(request, "If you want you can add new plan below.")
+        
     if request.method == 'POST':
-        form = MealPlanForm(request.POST)
+        meal_plan_form = MealPlanForm(request.POST)
 
-        if form.is_valid():
-            meal_plan = form.save(commit=False)
+        if meal_plan_form.is_valid():
+            meal_plan = meal_plan_form.save(commit=False)
             meal_plan.user_id = request.user
             meal_plan.save()
-            return redirect('home-page')
+            return redirect('create-plan')
 
-    context = {'form': form}
-    return render(request, 'base/meal_plan_form.html', context)
+        menu_form = MenuForm(request.POST)
+
+        if menu_form.is_valid():
+            menu = menu_form.save(commit=False)
+            menu.meal_plan = meal_plan
+            menu.save()
+            return redirect('create-plan')
+
+    return render(request, 'base/meal_plan.html', context)
 
 @login_required(login_url='login-page')
 def editMealPlan(request, pk):
     meal_plan = Meal_Plan.objects.get(id=pk)
-    form = MealPlanForm(instance=meal_plan)
+    meal_plan_form = MealPlanForm(instance=meal_plan)
 
     if request.user != meal_plan.user_id:
         return HttpResponse("You are not allowed to edit recipe made by someone else!")
 
     if request.method == 'POST':
-        form = MealPlanForm(request.POST, instance=meal_plan)
-        if form.is_valid():
-            form.save()
+        meal_plan_form = MealPlanForm(request.POST, instance=meal_plan)
+        if meal_plan_form.is_valid():
+            meal_plan_form.save()
             return redirect('profile-page')
-    context = {'form':form}
-    return render(request, 'base/meal_plan_form.html', context)
+    context = {'meal_plan_form': meal_plan_form}
+    return render(request, 'base/meal_plan.html', context)
 
 @login_required(login_url='login-page')
 def activateMealPlan(request, pk):
@@ -156,6 +172,28 @@ def deleteMealPlan(request, pk):
         return redirect('profile-page')
 
     return render(request, 'base/delete.html', {'obj': meal_plan})
+
+@login_required(login_url='login-page')
+def addMenu(request, pk):
+    recipe = Meal.objects.get(id=pk)
+    menu_form = MenuForm()
+    menu_form.initial['meal'] = recipe
+    context = {}
+    
+    try:
+        meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active = True)
+        context.update({'menu_form': menu_form})
+        context.update({'meal_plan': meal_plan})
+
+        if request.method == 'POST':
+            form = MenuForm(request.POST)
+            if form.is_valid():
+                form.save()
+                
+    except:
+        return redirect('home-page')
+
+    return render(request, 'base/meal_plan.html', context)
 
 @login_required(login_url='login-page')
 def profilePage(request):

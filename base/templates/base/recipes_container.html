@@ -29,6 +29,7 @@
             <a href="{% url 'edit-meal' recipe.id %}">Edit</a>
             <a href="{% url 'delete-meal' recipe.id %}">Delete</a>
         {% endif %}
+        <a href="{% url 'add-menu' recipe.id %}">Add</a>
     </h4>
     <small><b>Category</b> <i>{{recipe.category}}</i></small>
     <p>{{recipe.description}}</p>

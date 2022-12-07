@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+{% include 'base/messages.html' %}
+
+{% if meal_plan %}
+    <h3>Active plan - {{meal_plan.name}}</h3>
+    <form method="POST" action="">
+        {% csrf_token %}
+        {{ menu_form.as_p }}
+        <input type="submit" value="Submit"/>
+    </form>
+
+{% else %}
+    <div>
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{ meal_plan_form.as_p }}
+            <input type="submit" value="Submit"/>
+        </form>
+    </div>
+{% endif %}
+
+{% endblock content%}
