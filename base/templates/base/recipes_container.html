@@ -1,39 +1,33 @@
-<div>
-    <h3>Recipes</h3>
-    <hr>
-</div>
-
-<div>
-{% if request.user.is_authenticated %}
-    <a href="{% url 'create-meal' %}">Add recipe</a>
-{% endif %}
-</div>
-
-<div>
-    <p>
-        <form method="GET" action="">
-            <input type="text" name="q" placeholder="Filter recipes...">
-            <a href="{% url 'recipe-page'%}">Show all</a>
-        </form>
-        {% for meal_time in meal_times %}
-            <small><a href="{% url 'recipe-page'%}?q={{meal_time.name}}">{{meal_time.name}}</a></small>
-        {% endfor %}
-    </p>
-</div>
-
-{% for recipe in recipes_set %}
-<div>
-    <h4>{{recipe.name}} 
-        <small><i>by {{recipe.author}}</i></small>
-        {% if request.user == recipe.author  %}
-            <a href="{% url 'edit-meal' recipe.id %}">Edit</a>
-            <a href="{% url 'delete-meal' recipe.id %}">Delete</a>
+<div class="shadow p-4 mb-5 bg-body rounded">
+    <div>
+        <h3>Recipes</h3>
+        <hr>
+    </div>
+    
+    <div>
+    {% if request.user.is_authenticated %}
+        <a href="{% url 'create-meal' %}">Add recipe</a>
+    {% endif %}
+    </div>
+    
+    {% for recipe in recipes_set %}
+    <div>
+        <h4>{{recipe.name}} 
+            <small><i>by {{recipe.author}}</i></small>
+            {% if request.user == recipe.author  %}
+                <a href="{% url 'edit-meal' recipe.id %}">Edit</a>
+                <a href="{% url 'delete-meal' recipe.id %}">Delete</a>
+            {% endif %}
+            <a href="{% url 'add-menu' recipe.id %}">Add</a>
+        </h4>
+        <p><small><b>Category</b> <i>{{recipe.category}}</i></small></p>
+        {% if recipe.meal_picture %}
+            <img src="{{recipe.meal_picture.url}}" class="img-fluid rounded">
         {% endif %}
-        <a href="{% url 'add-menu' recipe.id %}">Add</a>
-    </h4>
-    <small><b>Category</b> <i>{{recipe.category}}</i></small>
-    <p>{{recipe.description}}</p>
-    <small><b>Energy</b> <i>{{recipe.energy_kcal}} kcal</i></small>
-    <hr>
+        <p>{{recipe.description}}</p>
+        <small><b>Energy</b> <i>{{recipe.energy_kcal}} kcal</i></small>
+        <hr>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
+

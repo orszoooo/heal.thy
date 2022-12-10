@@ -1,2 +1,26 @@
-<h3>Inspirations</h3>
-<hr>
+<div class="shadow p-4 mb-5 bg-body rounded">
+    <div>
+        <h3>Inspirations</h3>
+        <hr>
+        <h3>New recipes in database!</h3>
+    </div>
+    <div>
+        {% for obj in inspirations %}
+            <div>
+                <h4>{{obj.name}}</h4>
+            </div>
+            <div>
+                <p>{{obj.description_short}}...</p>
+                {% if obj.meal_picture %}
+                    <img src="{{obj.meal_picture.url}}" class="img-fluid rounded">
+                {% endif %}
+    
+                {% if request.user.is_authenticated %}
+                    <p><small><a href="{% url 'add-menu' obj.id %}">Add to your day</a></small></p>
+                {% endif %}
+                <hr>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+

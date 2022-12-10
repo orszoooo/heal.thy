@@ -17,6 +17,6 @@ urlpatterns = [
     path('delete-plan/<str:pk>', views.deleteMealPlan, name='delete-plan'),
     path('add-menu/<str:pk>', views.addMenu, name='add-menu'),
     #path('edit-menu/<str:pk>', views.editMenu, name='edit-menu'),
-    #path('delete-menu/<str:pk>', views.deleteMenu, name='delete-menu'),
+    path('delete-menu/<str:pk>', views.deleteMenu, name='delete-menu'),
     path('profile/', views.profilePage, name='profile-page'),
 ]

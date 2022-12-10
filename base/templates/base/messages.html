@@ -1,7 +1,12 @@
 {% if messages %}
+    <div class="d-flex justify-content-center">
         <ul class="messages">
             {% for message in messages %}
-            <h3>{{ message }}</h3>
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
             {% endfor %}
         </ul>
+    </div>
+    
 {% endif %}

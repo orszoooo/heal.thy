@@ -1,26 +1,20 @@
 {% extends 'main.html' %}
 
 {% block content %}
-<style>
-    .home-container{
-        display: grid;
-        grid-template-columns: 1fr 3fr 1fr;
-    }
-</style>
-
-<div class="home-container">
-    <div>{% include 'base/inspirations_feed.html '%}</div>
-
-    {% if recipes %}
-    <div>{% include 'base/recipes_container.html' %}</div>
-    {% else %}
-        {% if request.user.is_authenticated %}
-        <div>{% include 'base/yourplan_container.html' %}</div>
+<div class="container">
+    <div class="row">
+        {% if recipes %}
+            <div class="col">{% include 'base/recipes_navbar.html '%}</div>
+            <div class="col-12 col-lg-6">{% include 'base/recipes_container.html' %}</div>
         {% else %}
-        <div>{% include 'base/homepage_container.html' %}</div>
+            <div class="col col-lg-3 order-lg-1 order-2">{% include 'base/inspirations_feed.html '%}</div>
+            {% if request.user.is_authenticated %}
+                <div class="col-12 col-lg-6 order-lg-2 order-1">{% include 'base/yourplan_container.html' %}</div>
+            {% else %}
+                <div class="col-12 col-lg-6 order-lg-2 order-1">{% include 'base/homepage_container.html' %}</div>
+            {% endif %}
         {% endif %}
-    {% endif %}
-
-    <div>{% include 'base/profile_container.html' %}</div>
+        <div class="col order-3">{% include 'base/profile_container.html' %}</div>
+    </div>
 </div>  
 {% endblock content %}

@@ -1,9 +1,13 @@
-<h3>Profile</h3>
-<hr>
+<div class="shadow p-4 mb-5 bg-body rounded">
+    <h3>Profile</h3>
+    <hr>
 
-{% if request.user.is_authenticated %}
-    <h4>Welcome back <i>{{request.user}}</i>!</h4>
-    <a href="{% url 'logout-page' %}">Logout</a>
-{% else %}
-    <a href="{% url 'login-page' %}">Login</a>
-{% endif %}
+    {% if request.user.is_authenticated %}
+        <h4>Welcome back <i>{{request.user}}</i>!</h4>
+        <a href="{% url 'logout-page' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'login-page' %}">Login</a>
+    {% endif %}
+
+</div>
+
