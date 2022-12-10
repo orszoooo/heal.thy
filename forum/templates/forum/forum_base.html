@@ -1,0 +1,37 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<!-- css -->
+<style>
+    .forum-container{
+        display: grid;
+        grid-template-columns: 1fr 3fr 1fr;
+    }
+</style>
+
+<div class="forum-container">
+    <div>
+       {% include 'forum/topics_component.html' %}
+    </div>
+
+    <div>
+        <h5>{{room_count}} rooms available
+            <form method="GET" action="{% url 'forum' %}">
+                <input type="text" name="q" placeholder="Search Rooms..."/>
+            </form>
+        </h5>
+        <hr>
+        <a href="{% url 'create-room' %}">Create Room</a>
+        
+        <div>
+            {% include 'forum/feed_component.html' %}
+        </div>
+    </div>
+
+    <div>
+        {% include 'forum/activity_component.html' %}
+    </div>
+</div>
+
+{% endblock %}

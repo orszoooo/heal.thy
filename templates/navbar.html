@@ -9,10 +9,13 @@
     <span><a href="{% url 'home-page' %}">Home</a></span>
     <span><a href="{% url 'recipe-page' %}">Recipes</a></span>
     <span><a href="{% url 'home-page' %}">Health Advices</a></span>
-    <span><a href="{% url 'home-page' %}">Forum</a></span>
+    <span><a href="{% url 'forum' %}">Forum</a></span>
     {% if request.user.is_authenticated %}
         <span><a href="{% url 'create-plan' %}">Make Plan</a></span>
         <span><a href="{% url 'profile-page' %}">Profile</a></span>
+        <span><a href="{% url 'logout-page' %}">Logout</a></span>
+    {% else %}
+    <span><a href="{% url 'login-page' %}">Login</a></span>
     {% endif %}
 </div>
 <hr>
