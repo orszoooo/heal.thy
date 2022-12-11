@@ -16,7 +16,7 @@ urlpatterns = [
     path('edit-plan/<str:pk>', views.editMealPlan, name='edit-plan'),
     path('delete-plan/<str:pk>', views.deleteMealPlan, name='delete-plan'),
     path('add-menu/<str:pk>', views.addMenu, name='add-menu'),
-    #path('edit-menu/<str:pk>', views.editMenu, name='edit-menu'),
     path('delete-menu/<str:pk>', views.deleteMenu, name='delete-menu'),
-    path('profile/', views.profilePage, name='profile-page'),
+    path('plan-pdf/', views.planPDF, name='plan-pdf'),
+    path('profile/',views.profilePage, name="profile-page"),
 ]

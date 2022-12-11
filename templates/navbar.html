@@ -1,4 +1,10 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between">
+<style>
+  .navbar-custom {
+    background-color: rgba(12, 108, 63, 0.836);
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom sticky-top justify-content-between">
     <div class="container-fluid">
       <a class="navbar-brand" href="{% url 'home-page' %}">Heal.thy</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -21,9 +27,6 @@
                 <li><a class="dropdown-item" href="{% url 'recipe-page'%}?q=Snacks">Snacks</a></li>
             </ul>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{% url 'forum' %}">Forum</a>
-          </li>
             {% if request.user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'create-plan' %}">Make Plan</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'profile-page' %}">Profile</a></li>
@@ -31,9 +34,22 @@
         </ul>
         <div class="d-flex justify-content-end">
             {% if request.user.is_authenticated %}
-                <a class="btn btn-outline-light" href="{% url 'logout-page' %}" role="button">Logout</a>
+                <a class="btn btn-outline-light" href="{% url 'logout-page' %}" role="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                  </svg>
+                  Logout
+                </a>
             {% else %}
-                <a class="btn btn-outline-light" href="{% url 'login-page' %}" role="button">Login</a>
+                <a class="btn btn-outline-light" href="{% url 'login-page' %}" role="button">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0v-2z"/>
+                    <path fill-rule="evenodd" d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                  </svg>
+                  Login
+                </a>
+
             {% endif %}
         </div>
       </div>

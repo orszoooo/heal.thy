@@ -4,22 +4,32 @@
 
 {% include 'base/messages.html' %}
 
-{% if meal_plan %}
-    <h3>Active plan - {{meal_plan.name}}</h3>
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{ menu_form.as_p }}
-        <input type="submit" value="Submit"/>
-    </form>
+<div class="d-flex justify-content-center">
+    <div class="shadow p-4 mb-5 bg-body rounded">
+        {% if meal_plan %}
+            <h3>Active plan - {{meal_plan.name}}</h3>
+            <hr>
+            <form method="POST" action="">
+                {% csrf_token %}
+                {{ menu_form.as_p }}
+                <div class="d-grid gap-2">
+                    <button type="submit" value="Login" class="btn btn-dark">Submit</button>
+                </div>
+            </form>
 
-{% else %}
-    <div>
-        <form method="POST" action="">
-            {% csrf_token %}
-            {{ meal_plan_form.as_p }}
-            <input type="submit" value="Submit"/>
-        </form>
+        {% else %}
+            <div>
+                <h3>Create new plan</h3>
+                <hr>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    {{ meal_plan_form.as_p }}
+                    <div class="d-grid gap-2">
+                        <button type="submit" value="Login" class="btn btn-dark">Submit</button>
+                    </div>
+                </form>
+            </div>
+        {% endif %}
     </div>
-{% endif %}
-
+</div>
 {% endblock content%}

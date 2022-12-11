@@ -1,13 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.http import FileResponse, HttpResponse
 from django.contrib.auth.models import User
-from django.db.models import Q, Count
-from django.contrib.auth.forms import UserCreationForm
+from django.db.models import Q
 from django.contrib import messages
 from .models import Meal_Plan, Menu, Meal, Meal_Time
 from .forms import MealForm, MealPlanForm, MenuForm, RegisterUserForm
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from reportlab.lib.pagesizes import letter
+import io
+
 
 # Create your views here.
 def homePage(request):
@@ -25,6 +29,30 @@ def homePage(request):
             messages.error(request, "If you have plan already, select active plan. You can do it in profile tab.")
            
     return render(request, 'base/home.html', context)
+
+def planPDF(request):
+    buffer = io.BytesIO()
+    c = canvas.Canvas(buffer ,pagesize=letter, bottomup=0)
+
+    textobj = c.beginText()
+    textobj.setTextOrigin(inch,inch)
+    textobj.setFont("Helvetica", 14)
+
+    lines = [
+        "This is line 1",
+        "This is line 2",
+        "This is line 3",
+    ]
+
+    for line in lines:
+        textobj.textLine(line)
+
+    c.drawText(textobj)
+    c.showPage()
+    c.save()
+    buffer.seek(0)
+
+    return FileResponse(buffer, as_attachment=True, filename="plan.pdf")
 
 def recipesPage(request):
     recipes = True
@@ -100,8 +128,8 @@ def createMealPlan(request):
         meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active = True)
         context.update({'meal_plan': meal_plan})
     except:
-        messages.error(request, "You have plans assigned. Select active plan. ")
-        messages.error(request, "If you want you can add new plan below.")
+        messages.warning(request, "You have plans assigned. Select active plan. ")
+        messages.warning(request, "If you want you can add new plan below.")
         
     if request.method == 'POST':
         meal_plan_form = MealPlanForm(request.POST)
@@ -110,7 +138,7 @@ def createMealPlan(request):
             meal_plan = meal_plan_form.save(commit=False)
             meal_plan.user_id = request.user
             meal_plan.save()
-            return redirect('create-plan')
+            return redirect('profile-page')
 
         menu_form = MenuForm(request.POST)
 
