@@ -1,0 +1,62 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title>Title</title>
+        <style type="text/css">
+            body {
+                font-weight: 200;
+                font-size: 14px;
+            }
+            .header {
+                font-size: 18px;
+                font-weight: 100;
+                text-align: left;
+                color: #00934a;
+            }
+            .title {
+                font-size: 22px;
+                font-weight: 100;
+               text-align: center;
+               padding: 10px 20px 0px 20px;  
+            }
+            .title span {
+                color: #007cae;
+            }
+            .details {
+                padding: 10px 20px 0px 20px;
+                text-align: left !important;
+                /*margin-left: 40%;*/
+            }
+            .hrItem {
+                border: none;
+                height: 1px;
+                /* Set the hr color */
+                color: #333; /* old IE */
+                background-color: #fff; /* Modern Browsers */
+            }
+        </style>
+    </head>
+    <body>
+        <div class='wrapper'>
+            <div class='header'>
+                <p class='title'><b><i>{{meal_plan.name}}</i></b></p>
+            </div>
+        <div>
+        <div class='details'>
+            {% for day in days %}
+                <div class='header'>
+                    <b>{{day.date|date:"l j.n.Y"}}</b>
+                </div>
+                {% for menu in menus %}
+                    {% if menu.date == day.date %}
+                        <b>{{menu.meal_time}}</b> <br/>
+                        <i>{{menu.meal.name}}</i> <br/>
+                        {{menu.meal.description}} <br/>
+                        Energy: {{menu.meal.energy_kcal}} kcal <br/>
+                        <hr class='hrItem' />
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </body>
+</html>

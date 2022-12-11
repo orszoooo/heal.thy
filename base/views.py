@@ -1,22 +1,19 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import FileResponse, HttpResponse
+from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib import messages
 from .models import Meal_Plan, Menu, Meal, Meal_Time
 from .forms import MealForm, MealPlanForm, MenuForm, RegisterUserForm
-from reportlab.pdfgen import canvas
-from reportlab.lib.units import inch
-from reportlab.lib.pagesizes import letter
-import io
+from .utils import render2pdf
 
 
 # Create your views here.
 def homePage(request):
     inspirations = Meal.objects.all()
-    context = {'inspirations': inspirations}
+    context = {'inspirations': inspirations[0:5]}
 
     if request.user.is_authenticated:
         try:
@@ -30,30 +27,21 @@ def homePage(request):
            
     return render(request, 'base/home.html', context)
 
+
+@login_required(login_url='login-page')
 def planPDF(request):
-    buffer = io.BytesIO()
-    c = canvas.Canvas(buffer ,pagesize=letter, bottomup=0)
+    try:
+        meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active=True)
+        menus = Menu.objects.filter(meal_plan=meal_plan)
+        days = menus.order_by().values('date').distinct()
+        context = {'meal_plan': meal_plan, 'days': days, 'menus': menus}
+        pdf = render2pdf('base/plan.html', context)
+        return HttpResponse(pdf, content_type='application/pdf')
+    except:
+        messages.error(request, "To generate PDF you need active meal plan!")
+        return redirect('home-page')
 
-    textobj = c.beginText()
-    textobj.setTextOrigin(inch,inch)
-    textobj.setFont("Helvetica", 14)
-
-    lines = [
-        "This is line 1",
-        "This is line 2",
-        "This is line 3",
-    ]
-
-    for line in lines:
-        textobj.textLine(line)
-
-    c.drawText(textobj)
-    c.showPage()
-    c.save()
-    buffer.seek(0)
-
-    return FileResponse(buffer, as_attachment=True, filename="plan.pdf")
-
+    
 def recipesPage(request):
     recipes = True
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -79,9 +67,8 @@ def createMeal(request):
         if form.is_valid():
             meal = form.save(commit=False)
             meal.author = request.user
-            meal.description_short = meal.description[0:50]
             meal.save()
-            return redirect('home-page')
+            return redirect('recipe-page')
 
     context = {'form': form}
     return render(request, 'base/meal_form.html', context)
@@ -99,7 +86,6 @@ def editMeal(request, pk):
 
         if form.is_valid():
             meal = form.save(commit=False)
-            meal.description_short = meal.description[0:50]
             meal.save()
             return redirect('recipe-page')
     context = {'form': form}
@@ -121,16 +107,19 @@ def deleteMeal(request, pk):
 @login_required(login_url='login-page')
 def createMealPlan(request):
     meal_plan_form = MealPlanForm()
-    menu_form = MenuForm()
-    context = {'meal_plan_form': meal_plan_form, 'menu_form': menu_form}
+    context = {'meal_plan_form': meal_plan_form}
+    meal_plan = 0
 
     try:
         meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active = True)
         context.update({'meal_plan': meal_plan})
+
     except:
-        messages.warning(request, "You have plans assigned. Select active plan. ")
-        messages.warning(request, "If you want you can add new plan below.")
-        
+        messages.warning(request, "Create new plan or select active plan if you have one. ")
+
+    if meal_plan:
+            return redirect('add-menu')
+
     if request.method == 'POST':
         meal_plan_form = MealPlanForm(request.POST)
 
@@ -139,14 +128,6 @@ def createMealPlan(request):
             meal_plan.user_id = request.user
             meal_plan.save()
             return redirect('profile-page')
-
-        menu_form = MenuForm(request.POST)
-
-        if menu_form.is_valid():
-            menu = menu_form.save(commit=False)
-            menu.meal_plan = meal_plan
-            menu.save()
-            return redirect('create-plan')
 
     return render(request, 'base/meal_plan.html', context)
 
@@ -208,7 +189,30 @@ def deleteMealPlan(request, pk):
     return render(request, 'base/delete.html', {'obj': meal_plan})
 
 @login_required(login_url='login-page')
-def addMenu(request, pk):
+def addMenu(request):
+    menu_form = MenuForm()
+    context = {}
+    
+    try:
+        meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active = True)
+        context.update({'menu_form': menu_form})
+        context.update({'meal_plan': meal_plan})
+
+        if request.method == 'POST':
+            form = MenuForm(request.POST)
+            if form.is_valid():
+                menu = form.save(commit=False)
+                menu.meal_plan = meal_plan
+                menu.save()
+                form.save()
+                return redirect('recipe-page')  
+    except:
+        return redirect('home-page')
+
+    return render(request, 'base/menu_form.html', context)
+
+@login_required(login_url='login-page')
+def addMenuPk(request, pk):
     recipe = Meal.objects.get(id=pk)
     menu_form = MenuForm()
     menu_form.initial['meal'] = recipe
@@ -222,12 +226,15 @@ def addMenu(request, pk):
         if request.method == 'POST':
             form = MenuForm(request.POST)
             if form.is_valid():
+                menu = form.save(commit=False)
+                menu.meal_plan = meal_plan
+                menu.save()
                 form.save()
                 return redirect('recipe-page')  
     except:
         return redirect('home-page')
 
-    return render(request, 'base/meal_plan.html', context)
+    return render(request, 'base/menu_form.html', context)
 
 @login_required(login_url='login-page')
 def deleteMenu(request, pk):

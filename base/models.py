@@ -26,7 +26,6 @@ class Meal(models.Model):
     name = models.CharField(max_length=200)
     category = models.ForeignKey(Meal_Time, on_delete=models.SET_NULL, null=True)
     description = models.TextField(null=True, blank=True) 
-    description_short = models.TextField(null=True, blank=True)
     meal_picture = models.ImageField(null=True, blank=True, upload_to='images/')
     energy_kcal = models.CharField(max_length=200)
     created = models.DateTimeField(auto_now_add=True)
