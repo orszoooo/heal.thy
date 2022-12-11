@@ -1,19 +1,30 @@
-<div class="shadow p-4 mb-5 bg-body rounded">
+<div>
     {% include 'base/messages.html' %}
 
     {% if meal_plan.is_active %}
-        <h3>Your plan - {{meal_plan.name}}</h3>
-        <hr>
-        {% for menu in menus %}
-            <h4>{{menu.date}}: {{menu.meal_time}}</h4>
-            <h4>{{menu.meal.name}}</h4>
-            <p>{{menu.meal.description}}</p>
-            <small>Energy: {{menu.meal.energy_kcal}} kcal</small>
-            <small>
-                <a href="{% url 'delete-menu' menu.id %}">Delete</a>
-            </small>
+    <div class="shadow p-4 mb-5 bg-body rounded">
+        <h2>Your plan - {{meal_plan.name}}</h2>
+    </div>
+    <div>
+        {% for day in days %}
+        <div  class="shadow p-4 mb-5 bg-body rounded">
+            <h3 class="text-center">{{day.date|date:"l j.n.Y"}}</h3>
             <hr>
+            {% for menu in menus %}
+                {% if menu.date == day.date %}
+                    <h4>{{menu.meal_time}}</h4>
+                    <h5><i>{{menu.meal.name}}</i></h5>
+                    <p>{{menu.meal.description}}</p>
+                    <small>Energy: {{menu.meal.energy_kcal}} kcal</small>
+                    <small>
+                        <a href="{% url 'delete-menu' menu.id %}">Delete</a>
+                    </small>
+                    <hr>
+                {% endif %}
+            {% endfor %}
+        </div>
         {% endfor %}
+    </div>
     {% endif %}
 </div>
 

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.contrib.auth.models import User
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from .models import Meal_Plan, Menu, Meal, Meal_Time
@@ -18,7 +18,8 @@ def homePage(request):
         try:
             meal_plan = Meal_Plan.objects.get(user_id=request.user, is_active=True)
             menus = Menu.objects.filter(meal_plan=meal_plan)
-            context.update({'meal_plan': meal_plan, 'menus': menus})
+            days = menus.order_by().values('date').distinct()
+            context.update({'meal_plan': meal_plan, 'days': days, 'menus': menus})
         except:
             messages.error(request, "Please create your meal plan!")
             messages.error(request, "If you have plan already, select active plan. You can do it in profile tab.")
